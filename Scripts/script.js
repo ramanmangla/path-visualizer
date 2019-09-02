@@ -9,12 +9,19 @@ class Graph {
 
 // Vertex Class
 class Vertex {
-	constructor(num, distance, color, parent, isWall){
+	/*
+		Initialzes vertex number 'num'.
+		Initially, all vertices are colored "white", have no parent, and are not walls
+		They are also "infinitley" away from the source, as they haven't been discovered
+	*/
+	constructor(num){
 		this.num = num;
-		this.distance = distance;
-		this.color = color;
-		this.parent = parent;
-		this.isWall = isWall;
+		// All vertices are 
+		this.distance = Number.MAX_SAFE_INTEGER;
+		// Initially, all vertices are white
+		this.color = 'w';
+		this.parent = null;
+		this.isWall = false;
 	}
 }
 
