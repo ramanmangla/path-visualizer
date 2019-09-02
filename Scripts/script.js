@@ -29,13 +29,47 @@ class PriorityQueue {
 		return baseArray[0];
 	}
 
+	minHeapify(index){
+		// Get the index of the left and right child of index node
+		const left = 2*index + 1;
+		const right = 2*index + 2;
+		let smallest = 0;
+
+		/*
+			Figure out who the smallest is among:
+			baseArray[left], baseArray[right], baseArray[index]
+		*/
+		if(left <= this.baseArray.length && 
+			this.baseArray[left] < this.baseArray[index]){
+			smallest = left;
+		}else{
+			smallest = index;
+		}
+
+		if(right <= this.baseArray.length && 
+			this.baseArray[right] < this.baseArray[smallest]){
+			smallest = right;
+		}
+
+		/*
+			If baseArray[index] wasn't smallest, swap it with the 
+			smallest index. Then, minHeapify at smallest index
+		*/
+		if(smallest != index){
+			const temp = this.baseArray[index];
+			this.baseArray[index] = this.baseArray[smallest];
+			this.baseArray[smallest] = temp;
+			this.minHeapify(smallest);
+		}
+	}
+
 	extractMin(){
 		if(this.baseArray.length >= 1){
 			const min = this.baseArray[0];
 			this.baseArray[0] = this.baseArray[this.baseArray.length - 1];
-			heapSize -= 1;
-			// TODO: Implement minHeapify
-			minHeapify(this.baseArray, 0);
+			// Remove the last element.
+			this.baseArray.pop();
+			this.minHeapify(0);
 			return min;
 		}
 	}
