@@ -2,8 +2,8 @@
 let columns;
 let rows;
 let cellSize = 30;
-// Accounting for border width
-cellSize = cellSize + 1;
+// Accounting for grid gap
+cellSize = cellSize + 5;
 let grid = $(".grid");
 
 const gridGeneration = callback => {
