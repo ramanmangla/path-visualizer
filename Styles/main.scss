@@ -12,10 +12,35 @@
 .legend {
   flex-grow: 1;
   width: 100%;
-  margin-top: 10px;
   display: flex;
   justify-content: center;
   align-items: center;
+  border-top: 1px solid #333;
+  border-bottom: 1px solid #333;
+}
+
+.inline-list {
+  width: 90%;
+}
+
+/*****************************
+        Header
+*****************************/
+
+.grid {
+  width: 100%;
+  height: 95%;
+  display: grid;
+  grid-gap: 5px;
+
+  &-cell {
+    background: #eee;
+    border-radius: 50%;
+
+    &-active {
+      background: #16a085;
+    }
+  }
 }
 
 /*****************************
