@@ -1,5 +1,7 @@
-// Mouse press state
+// Left key press state
 let mousePressed = false;
+
+// Number of grid cols and rows
 let columns;
 let rows;
 
@@ -21,6 +23,11 @@ let grid = $(".grid");
 const setCellClass = (row, col, className) => {
   let index = row * columns + (col + 1);
   $(".grid-cell:nth-child(" + index + ")").addClass(className);
+};
+
+const removeCellClass = (row, col, className) => {
+  let index = row * columns + (col + 1);
+  $(".grid-cell:nth-child(" + index + ")").removeClass(className);
 };
 
 const positionToIndices = event => {
@@ -59,7 +66,7 @@ const gridGeneration = callback => {
 
   for (let row = 0; row < rows; row++) {
     for (let col = 0; col < columns; col++) {
-      grid.append('<div class="grid-cell"></div>');
+      grid.append('<div class="grid-cell" draggable="false"></div>');
     }
   }
 
@@ -67,29 +74,58 @@ const gridGeneration = callback => {
 };
 
 const setClickEvents = () => {
+  // Mouse over (hover into) event for active wall cells
   $(".grid-cell").on("mouseover", event => {
     if (
       mousePressed === true &&
       !$(event.target).hasClass("grid-cell-start") &&
-      !$(event.target).hasClass("grid-cell-end")
+      !$(event.target).hasClass("grid-cell-end") &&
+      !startMove &&
+      !endMove
     ) {
       $(event.target).addClass("grid-cell-active");
     }
   });
 
+  // Mouse down event for active wall cells
   $(".grid-cell").on("mousedown", event => {
     if (
-      mousePressed === true &&
+      event.button === 0 &&
       !$(event.target).hasClass("grid-cell-start") &&
       !$(event.target).hasClass("grid-cell-end")
     ) {
+      mousePressed = true;
       $(event.target).addClass("grid-cell-active");
-    } else if ($(event.target).hasClass("grid-cell-start")) {
+    } else if (
+      event.button === 0 &&
+      $(event.target).hasClass("grid-cell-start")
+    ) {
+      mousePressed = true;
       startMove = true;
-    } else {
+    } else if (event.button === 0) {
+      mousePressed = true;
       endMove = true;
     }
   });
+
+  // // Mouse up event for moving start and end points
+  // $(".grid-cell").on("mouseup", event => {
+  //   if (startMove) {
+  //     removeCellClass(startPoint[0], startPoint[1], "grid-cell-start");
+  //     $(event.target).addClass("grid-cell-start");
+
+  //     startPoint = positionToIndices(event);
+  //   } else if (endMove) {
+  //     removeCellClass(endPoint[0], endPoint[1], "grid-cell-end");
+  //     $(event.target).addClass("grid-cell-end");
+
+  //     endPoint = positionToIndices(event);
+  //   }
+
+  //   mousePressed = false;
+  //   startMove = false;
+  //   endMove = false;
+  // });
 
   $("#clearButton").on("click", () => {
     $(".grid-cell").removeClass("grid-cell-active");
@@ -100,24 +136,32 @@ const setClickEvents = () => {
   setCellClass(endPoint[0], endPoint[1], "grid-cell-end");
 };
 
+$(document).on("mouseup", event => {
+  if ($(event.target).hasClass("grid-cell")) {
+    if (startMove) {
+      removeCellClass(startPoint[0], startPoint[1], "grid-cell-start");
+      $(event.target).removeClass("grid-cell-active");
+      $(event.target).addClass("grid-cell-start");
+
+      startPoint = positionToIndices(event);
+    } else if (endMove) {
+      removeCellClass(endPoint[0], endPoint[1], "grid-cell-end");
+      $(event.target).removeClass("grid-cell-active");
+      $(event.target).addClass("grid-cell-end");
+
+      endPoint = positionToIndices(event);
+    }
+  }
+
+  mousePressed = false;
+  startMove = false;
+  endMove = false;
+});
+
 $(() => {
   gridGeneration(setClickEvents);
 });
 
 $(window).resize(() => {
   gridGeneration(setClickEvents);
-});
-
-$(document).on("mousedown", event => {
-  // Left click
-  if (event.button === 0) {
-    mousePressed = true;
-  }
-});
-
-$(document).on("mouseup", event => {
-  // Left click
-  if (event.button === 0) {
-    mousePressed = false;
-  }
 });
