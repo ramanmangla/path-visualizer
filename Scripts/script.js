@@ -66,6 +66,7 @@ const gridGeneration = callback => {
 
   for (let row = 0; row < rows; row++) {
     for (let col = 0; col < columns; col++) {
+      // draggable = false prevents default browser behaviour
       grid.append('<div class="grid-cell" draggable="false"></div>');
     }
   }
@@ -73,7 +74,7 @@ const gridGeneration = callback => {
   callback();
 };
 
-const setClickEvents = () => {
+const setEventHandlers = () => {
   // Mouse over (hover into) event for active wall cells
   $(".grid-cell").on("mouseover", event => {
     if (
@@ -127,6 +128,28 @@ const setClickEvents = () => {
   //   endMove = false;
   // });
 
+  $(document).on("mouseup", event => {
+    if ($(event.target).hasClass("grid-cell")) {
+      if (startMove && !$(event.target).hasClass("grid-cell-end")) {
+        removeCellClass(startPoint[0], startPoint[1], "grid-cell-start");
+        $(event.target).removeClass("grid-cell-active");
+        $(event.target).addClass("grid-cell-start");
+
+        startPoint = positionToIndices(event);
+      } else if (endMove && !$(event.target).hasClass("grid-cell-start")) {
+        removeCellClass(endPoint[0], endPoint[1], "grid-cell-end");
+        $(event.target).removeClass("grid-cell-active");
+        $(event.target).addClass("grid-cell-end");
+
+        endPoint = positionToIndices(event);
+      }
+    }
+
+    mousePressed = false;
+    startMove = false;
+    endMove = false;
+  });
+
   $("#clearButton").on("click", () => {
     $(".grid-cell").removeClass("grid-cell-active");
   });
@@ -136,32 +159,10 @@ const setClickEvents = () => {
   setCellClass(endPoint[0], endPoint[1], "grid-cell-end");
 };
 
-$(document).on("mouseup", event => {
-  if ($(event.target).hasClass("grid-cell")) {
-    if (startMove) {
-      removeCellClass(startPoint[0], startPoint[1], "grid-cell-start");
-      $(event.target).removeClass("grid-cell-active");
-      $(event.target).addClass("grid-cell-start");
-
-      startPoint = positionToIndices(event);
-    } else if (endMove) {
-      removeCellClass(endPoint[0], endPoint[1], "grid-cell-end");
-      $(event.target).removeClass("grid-cell-active");
-      $(event.target).addClass("grid-cell-end");
-
-      endPoint = positionToIndices(event);
-    }
-  }
-
-  mousePressed = false;
-  startMove = false;
-  endMove = false;
-});
-
 $(() => {
-  gridGeneration(setClickEvents);
+  gridGeneration(setEventHandlers);
 });
 
 $(window).resize(() => {
-  gridGeneration(setClickEvents);
+  gridGeneration(setEventHandlers);
 });
