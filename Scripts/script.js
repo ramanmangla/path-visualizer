@@ -1,9 +1,11 @@
+// Mouse press state
+let mousePressed = false;
 // cell size in pixels
 let columns;
 let rows;
 let cellSize = 25;
 // Accounting for grid gap
-cellSize = cellSize + 5;
+cellSize = cellSize + 4;
 let grid = $(".grid");
 
 const gridGeneration = callback => {
@@ -26,19 +28,24 @@ const gridGeneration = callback => {
 };
 
 const setClickEvents = () => {
-  $(".grid-cell").on("click", event => {
-    // $(this).addClass("grid-cell-active");
-    $(event.target).addClass("grid-cell-active");
+  $(".grid-cell").on("mouseover", event => {
+    if (mousePressed) {
+      $(event.target).addClass("grid-cell-active");
+    }
 
     console.log(event.target);
-    // $(this).css("background");
+
     let leftPosition = event.pageX - grid.offset().left;
     let topPosition = event.pageY - grid.offset().top;
 
     let colIndex = Math.floor(leftPosition / cellSize);
     let rowIndex = Math.floor(topPosition / cellSize);
 
-    // console.log($(this).offset().left);
+    console.log($(event.target).offset().left);
+  });
+
+  $("#clearButton").on("click", () => {
+    $(".grid-cell").removeClass("grid-cell-active");
   });
 };
 
@@ -48,4 +55,12 @@ $(() => {
 
 $(window).resize(() => {
   gridGeneration(setClickEvents);
+});
+
+$(document).on("mousedown", event => {
+  mousePressed = true;
+});
+
+$(document).on("mouseup", event => {
+  mousePressed = false;
 });
