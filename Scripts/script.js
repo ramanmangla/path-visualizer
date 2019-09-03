@@ -29,7 +29,7 @@ const gridGeneration = callback => {
 
 const setClickEvents = () => {
   $(".grid-cell").on("mouseover", event => {
-    if (mousePressed) {
+    if (mousePressed === true) {
       $(event.target).addClass("grid-cell-active");
     }
 
@@ -37,11 +37,19 @@ const setClickEvents = () => {
 
     let leftPosition = event.pageX - grid.offset().left;
     let topPosition = event.pageY - grid.offset().top;
-
     let colIndex = Math.floor(leftPosition / cellSize);
     let rowIndex = Math.floor(topPosition / cellSize);
+  });
 
-    console.log($(event.target).offset().left);
+  $(".grid-cell").on("mousedown", event => {
+    $(event.target).addClass("grid-cell-active");
+
+    console.log(event.target);
+
+    let leftPosition = event.pageX - grid.offset().left;
+    let topPosition = event.pageY - grid.offset().top;
+    let colIndex = Math.floor(leftPosition / cellSize);
+    let rowIndex = Math.floor(topPosition / cellSize);
   });
 
   $("#clearButton").on("click", () => {
@@ -58,9 +66,13 @@ $(window).resize(() => {
 });
 
 $(document).on("mousedown", event => {
-  mousePressed = true;
+  if (event.button === 0) {
+    mousePressed = true;
+  }
 });
 
 $(document).on("mouseup", event => {
-  mousePressed = false;
+  if (event.button === 0) {
+    mousePressed = false;
+  }
 });

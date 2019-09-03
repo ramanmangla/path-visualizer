@@ -165,6 +165,10 @@ a:hover {
   color: #6bb9f0;
 }
 
+button:focus {
+  outline: 0;
+}
+
 /*****************************
           Layout
 *****************************/
@@ -249,6 +253,9 @@ button:hover {
   justify-content: space-between;
   font-size: 0.8em;
 }
+.legend-item {
+  padding: 20px;
+}
 
 /*****************************
         Grid
@@ -262,6 +269,7 @@ button:hover {
 .grid-cell {
   background: #eee;
   border-radius: 50%;
+  transition: 0.3s;
 }
 .grid-cell-active {
   background: #16a085;
