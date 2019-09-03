@@ -274,5 +274,11 @@ button:hover {
 .grid-cell-active {
   background: #16a085;
 }
+.grid-cell-start {
+  background: #ffcb05;
+}
+.grid-cell-end {
+  background: #d91e18;
+}
 
 /*# sourceMappingURL=main.css.map */
