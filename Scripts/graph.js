@@ -47,7 +47,12 @@ class Graph {
     this.adjacencyList[v2].adj.push(this.vertices[v1]);
   }
 
-
+  /*
+    Makes vertexNum a wall
+  */
+  makeWall(vertexNum){
+    this.vertices[vertexNum].isWall = true;
+  }
 
   /*
     Finds the shortest path between vertex number s and vertex number d in an 
@@ -75,7 +80,7 @@ class Graph {
 
       for(let i = 0 ; i < this.adjacencyList[vertexNum].adj.length ; i++){
         let vertex = this.adjacencyList[vertexNum].adj[i];
-        if(vertex.color == 'w'){
+        if(vertex.color == 'w' && !vertex.isWall){
           vertex.color = 'g';
           vertex.distance = currVertex.distance + 1;
           vertex.parent = currVertex;
@@ -228,5 +233,20 @@ g.addEdge(5, 6);
 g.addEdge(1, 6);
 const p = g.dijkstra(0, 1);
 p.forEach(vertex => {
+  console.log(vertex.num);
+});
+
+console.log('-------------------------');
+
+// Test for Wall
+g = new Graph(5);
+g.addEdge(0, 1);
+g.addEdge(1, 2);
+g.addEdge(0, 3);
+g.addEdge(3, 4);
+g.addEdge(4, 2);
+g.makeWall(1);
+const path = g.dijkstra(0, 2);
+path.forEach(vertex => {
   console.log(vertex.num);
 });
