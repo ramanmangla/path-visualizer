@@ -18,6 +18,9 @@ cellSize = cellSize + 5;
 let startMove = false;
 let endMove = false;
 
+// Graph for grid
+let graph;
+
 let grid = $(".grid");
 
 const setCellClass = (row, col, className) => {
@@ -44,7 +47,7 @@ const positionToIndices = event => {
   return indices;
 };
 
-const gridGeneration = callback => {
+const gridGeneration = (callbackOne, callbackTwo) => {
   columns = Math.floor(grid.width() / cellSize);
   rows = Math.floor(grid.height() / cellSize);
 
@@ -71,7 +74,16 @@ const gridGeneration = callback => {
     }
   }
 
-  callback();
+  callbackOne();
+  callbackTwo();
+};
+
+const generateGraph = () => {
+  // Generate grid
+  graph = new Graph(rows, columns);
+
+  graph.matrix[startPoint[0]][startPoint[1]].type = "start";
+  graph.matrix[endPoint[0]][endPoint[1]].type = "end";
 };
 
 const setEventHandlers = () => {
@@ -85,6 +97,8 @@ const setEventHandlers = () => {
       !endMove
     ) {
       $(event.target).addClass("grid-cell-active");
+      let indices = positionToIndices(event);
+      graph.matrix[indices[0]][indices[1]].type = "wall";
     }
   });
 
@@ -97,6 +111,8 @@ const setEventHandlers = () => {
     ) {
       mousePressed = true;
       $(event.target).addClass("grid-cell-active");
+      let indices = positionToIndices(event);
+      graph.matrix[indices[0]][indices[1]].type = "wall";
     } else if (
       event.button === 0 &&
       $(event.target).hasClass("grid-cell-start")
@@ -135,13 +151,19 @@ const setEventHandlers = () => {
         $(event.target).removeClass("grid-cell-active");
         $(event.target).addClass("grid-cell-start");
 
+        graph.matrix[startPoint[0]][startPoint[1]].type = "normal";
+
         startPoint = positionToIndices(event);
+        graph.matrix[startPoint[0]][startPoint[1]].type = "start";
       } else if (endMove && !$(event.target).hasClass("grid-cell-start")) {
         removeCellClass(endPoint[0], endPoint[1], "grid-cell-end");
         $(event.target).removeClass("grid-cell-active");
         $(event.target).addClass("grid-cell-end");
 
+        graph.matrix[endPoint[0]][endPoint[1]].type = "normal";
+
         endPoint = positionToIndices(event);
+        graph.matrix[endPoint[0]][endPoint[1]].type = "end";
       }
     }
 
@@ -152,6 +174,12 @@ const setEventHandlers = () => {
 
   $("#clearButton").on("click", () => {
     $(".grid-cell").removeClass("grid-cell-active");
+
+    for (let i = 0; i < graph.matrix.length; i++) {
+      for (let j = 0; j < graph.matrix[i].length; j++) {
+        graph.matrix[i][j].type = "normal";
+      }
+    }
   });
 
   // Set classes for random start and end points
@@ -160,9 +188,9 @@ const setEventHandlers = () => {
 };
 
 $(() => {
-  gridGeneration(setEventHandlers);
+  gridGeneration(setEventHandlers, generateGraph);
 });
 
 $(window).resize(() => {
-  gridGeneration(setEventHandlers);
+  gridGeneration(setEventHandlers, generateGraph);
 });
