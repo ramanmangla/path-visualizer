@@ -4,7 +4,7 @@ class Node {
     // All vertices are
     this.distance = Number.MAX_SAFE_INTEGER;
     // Initially, all vertices are normal
-    // Types: wall, start, end, normal
+    // Types: wall, start, end, normal, visited
     this.type = "normal";
     // Parent for backtracking
     this.parent = null;

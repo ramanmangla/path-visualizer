@@ -280,5 +280,8 @@ button:hover {
 .grid-cell-end {
   background: #d91e18;
 }
+.grid-cell-visited {
+  background: #444;
+}
 
 /*# sourceMappingURL=main.css.map */

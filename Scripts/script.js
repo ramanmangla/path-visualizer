@@ -23,14 +23,25 @@ let graph;
 
 let grid = $(".grid");
 
+const indicesToIndex = (row, col) => {
+  return row * columns + (col + 1);
+};
+
 const setCellClass = (row, col, className) => {
-  let index = row * columns + (col + 1);
-  $(".grid-cell:nth-child(" + index + ")").addClass(className);
+  removeCellClass(row, col, "grid-cell-active");
+  removeCellClass(row, col, "grid-cell-start");
+  removeCellClass(row, col, "grid-cell-end");
+  removeCellClass(row, col, "grid-cell-visited");
+
+  $(".grid-cell:nth-child(" + indicesToIndex(row, col) + ")").addClass(
+    className
+  );
 };
 
 const removeCellClass = (row, col, className) => {
-  let index = row * columns + (col + 1);
-  $(".grid-cell:nth-child(" + index + ")").removeClass(className);
+  $(".grid-cell:nth-child(" + indicesToIndex(row, col) + ")").removeClass(
+    className
+  );
 };
 
 const positionToIndices = event => {
@@ -193,4 +204,72 @@ $(() => {
 
 $(window).resize(() => {
   gridGeneration(setEventHandlers, generateGraph);
+});
+
+const dijkstra = () => {
+  let queue = [];
+  let current;
+  let pathFound = false;
+  queue.push(startPoint);
+
+  while (queue.length > 0) {
+    let parent = current;
+    current = queue.shift();
+
+    if (current[0] == endPoint[0] && current[1] == endPoint[1]) {
+      pathFound = true;
+      break;
+    }
+
+    if (
+      graph.matrix[current[0]][current[1]].type != "visited" &&
+      graph.matrix[current[0]][current[1]].type != "wall"
+    ) {
+      if (current[0] - 1 >= 0 && current[1] >= 0) {
+        if (
+          graph.matrix[current[0] - 1][current[1]].type == "normal" ||
+          graph.matrix[current[0] - 1][current[1]].type == "end"
+        ) {
+          queue.push([current[0] - 1, current[1]]);
+        }
+      }
+
+      if (current[0] + 1 < rows && current[1] >= 0) {
+        if (
+          graph.matrix[current[0] + 1][current[1]].type == "normal" ||
+          graph.matrix[current[0] + 1][current[1]].type == "end"
+        ) {
+          queue.push([current[0] + 1, current[1]]);
+        }
+      }
+
+      if (current[0] >= 0 && current[1] - 1 >= 0) {
+        if (
+          graph.matrix[current[0]][current[1] - 1].type == "normal" ||
+          graph.matrix[current[0]][current[1] - 1].type == "end"
+        ) {
+          queue.push([current[0], current[1] - 1]);
+        }
+      }
+
+      if (current[0] >= 0 && current[1] + 1 < columns) {
+        if (
+          graph.matrix[current[0]][current[1] + 1].type == "normal" ||
+          graph.matrix[current[0]][current[1] + 1].type == "end"
+        ) {
+          queue.push([current[0], current[1] + 1]);
+        }
+      }
+
+      graph.matrix[current[0]][current[1]].type = "visited";
+      setCellClass(current[0], current[1], "grid-cell-visited");
+    }
+  }
+
+  setCellClass(startPoint[0], startPoint[0], "grid-cell-start");
+  console.log(pathFound);
+};
+
+$("#dijkstraButton").on("click", () => {
+  dijkstra();
 });
