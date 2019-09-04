@@ -12,7 +12,7 @@ let endPoint = [];
 // cell size in pixels
 let cellSize = 25;
 // Accounting for grid gap
-cellSize = cellSize + 4;
+cellSize = cellSize + 5;
 
 // Flags for moving start and end points
 let startMove = false;
