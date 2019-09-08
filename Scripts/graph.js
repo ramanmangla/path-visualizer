@@ -86,13 +86,13 @@ class Graph {
 
     let destinationFound = false;
 
-    while(q.length != 0){
+    while(q.length !== 0){
       let currVertex = q.shift();
       let vertexNum = currVertex.num;
 
       for(let i = 0 ; i < this.adjacencyList[vertexNum].adj.length ; i++){
         let vertex = this.adjacencyList[vertexNum].adj[i];
-        if(vertex.color == 'w' && !vertex.isWall){
+        if(vertex.color === 'w' && !vertex.isWall){
           vertex.color = 'g';
           vertex.distance = currVertex.distance + 1;
           vertex.parent = currVertex;
@@ -117,7 +117,7 @@ class Graph {
     let v = this.vertices[d];
     let path = [];
 
-    while(v != null){
+    while(v !== null){
       path.unshift(v);
       v = v.parent;
     }
@@ -161,37 +161,37 @@ function makeGrid(row, col){
 }
 
 
-// Test for Graph
-let g = new Graph(7);
-g.addEdge(0, 1);
-g.addEdge(0, 2);
-g.addEdge(1, 4);
-g.addEdge(2, 3);
-g.addEdge(3, 4);
-g.addEdge(4, 5);
-g.addEdge(5, 6);
-g.addEdge(1, 6);
-const p = g.dijkstra(0, 1);
-p.forEach(vertex => {
-  console.log(vertex.num);
-});
+// // Test for Graph
+// let g = new Graph(7);
+// g.addEdge(0, 1);
+// g.addEdge(0, 2);
+// g.addEdge(1, 4);
+// g.addEdge(2, 3);
+// g.addEdge(3, 4);
+// g.addEdge(4, 5);
+// g.addEdge(5, 6);
+// g.addEdge(1, 6);
+// const p = g.dijkstra(0, 1);
+// p.forEach(vertex => {
+//   console.log(vertex.num);
+// });
 
-console.log('-------------------------');
+// console.log('-------------------------');
 
-// Test for Wall
-g = new Graph(5);
-g.addEdge(0, 1);
-g.addEdge(1, 2);
-g.addEdge(0, 3);
-g.addEdge(3, 4);
-g.addEdge(4, 2);
-g.makeWall(1);
-const path = g.dijkstra(0, 2);
-path.forEach(vertex => {
-  console.log(vertex.num);
-});
+// // Test for Wall
+// g = new Graph(5);
+// g.addEdge(0, 1);
+// g.addEdge(1, 2);
+// g.addEdge(0, 3);
+// g.addEdge(3, 4);
+// g.addEdge(4, 2);
+// g.makeWall(1);
+// const path = g.dijkstra(0, 2);
+// path.forEach(vertex => {
+//   console.log(vertex.num);
+// });
 
-console.log('-------------------------');
+// console.log('-------------------------');
 
-g = makeGrid(4, 5);
-console.log(g.adjacencyList);
+// g = makeGrid(4, 5);
+// console.log(g.adjacencyList);

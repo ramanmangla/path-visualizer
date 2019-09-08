@@ -271,8 +271,11 @@ button:hover {
   border-radius: 50%;
   transition: 0.3s;
 }
-.grid-cell-active {
+.grid-cell-wall {
   background: #16a085;
+}
+.grid-cell-discovered {
+  background: #d9c155;
 }
 .grid-cell-start {
   background: #ffcb05;
@@ -281,7 +284,10 @@ button:hover {
   background: #d91e18;
 }
 .grid-cell-visited {
-  background: #444;
+  background: #1BA714;
 }
 
+.grid-cell-path {
+  background: #e92e68
+}
 /*# sourceMappingURL=main.css.map */
